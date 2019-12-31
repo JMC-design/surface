@@ -29,7 +29,7 @@
 (defgeneric prepare-surface (surface)   (:documentation "Prepares a surface to be displayed to"))
 (defgeneric visible?        (item)      (:documentation "Returns T if item is visible."))  
 (defgeneric map-surface     (surface)   (:documentation "Makes a hidden surface viewable."))
-(defgeneric unmap-surface   (surface)   (:documentation "Makes a hidden surface viewable."))
+(defgeneric unmap-surface   (surface)   (:documentation "Hides surface."))
 (defgeneric location        (surface)   (:documentation "Location of surface on screen."))
 (defgeneric move-surface    (surface location)(:documentation "Moves a surface to '(x . y)"))
 (defgeneric size            (surface)   (:documentation "returns surface size."))
