@@ -62,8 +62,8 @@
 (defgeneric pixel           (x y surface))
 (defgeneric set-pixel       (x y ink surface))
 
-(defgeneric blit            (source destination &optional src-x src-y dest-x dest-y src-width src-height))
-(defgeneric display    (data surface pov &key &allow-other-keys))
+(defgeneric blit            (source surface &optional src-x src-y dest-x dest-y src-width src-height))
+(defgeneric display         (data surface pov &key &allow-other-keys))
 
 ;(defgeneric attach-glcontext (surface context))
 
@@ -86,7 +86,6 @@
 
 (defun get-default-type ()
    (cdr (assoc (environment?) *environment->surface-type*)) )
-
 
 (defun available? (&optional type)
   (if type

@@ -60,7 +60,8 @@
    (pixel .
     "Returns the pixel values at X Y in a surface specific format. May be set with SETF.")
    (set-pixel .
-    "Sets the pixel at X Y with the given INK in surface specific format. e.g. 8bit framebuffer, 16bit X11.")
+    "Sets the pixel at X Y with the given INK in surface specific format. e.g. 8bit framebuffer, 16bit X11. INK may also be ~
+     A function that returns a colour when called with a given X Y, e.g. (funcall #'gradient 10 12)")
    (blit .
     "Blits the SOURCE to DESTINATION. Defaults to complete SOURCE to (0 . 0) on destination. Optionally specify SOURCE X Y, WIDTH, HEIGHT, and DESTINATION X Y.")
 
