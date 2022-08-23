@@ -14,7 +14,10 @@
 
 (document
  :functions
- '((create .
+ '((available? .
+    "Checks to see if a given type of surface is available when supplied with a type.  With no arguments returns a list of all types available.")
+   
+   (create .
     "Creates and returns a surface. :type (:width 10) (:height 10) (:depth 32) :location '(0 . 0) (:override :on) may be specified")
    (prepare .
     "Prepares a surface to be displayed to. Normally called during creation, but can be used to prepare a surface provided by another source to be used ~

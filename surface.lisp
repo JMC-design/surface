@@ -1,7 +1,8 @@
 (defpackage :surface 
   (:use :cl)
   (:shadow cl:map)
-  (:export #:create
+  (:export #:%create
+           #:create
 	   #:prepare
            #:destroy
                       
@@ -15,7 +16,8 @@
 	   #:location
 	   #:move
 
-	   #:data
+           #:buffer
+           #:data
 	   #:region
 
            #:clear
@@ -27,7 +29,10 @@
            #:depth	   			
 	   #:bpc
            #:bpp
-	   
+
+           #:attach
+           #:detach
+           
 	   #:display
 	   #:*available-surfaces*
            #:available?))
@@ -37,7 +42,8 @@
 (push :generic-surfaces cl:*features*)
 (defparameter *available-surfaces* '() "assoc list of (:KEY . #'fn-that-returns-a-surface)")
 
-(defgeneric prepare         (surface))
+(defgeneric %create         (type width height &key depth location &allow-other-keys))
+(defgeneric prepare         (surface &key &allow-other-keys))
 (defgeneric destroy         (surface))
 
 (defgeneric update          (surface))
@@ -55,8 +61,9 @@
 (defgeneric bpc             (surface));remove? add to properties?
 (defgeneric bpp             (surface));remove? add to properties?
 
+(defgeneric buffer          (surface &key &allow-other-keys))
 (defgeneric data            (surface &key &allow-other-keys))
-(defgeneric region          (start-x start-y width height surface &optional format))
+(defgeneric region          (start-x start-y width height surface &optional format type))
 
 (defgeneric clear           (surface &optional colour))
 (defgeneric pixel           (x y surface))
@@ -65,7 +72,8 @@
 (defgeneric blit            (source surface &optional src-x src-y dest-x dest-y src-width src-height))
 (defgeneric display         (data surface pov &key &allow-other-keys))
 
-;(defgeneric attach-glcontext (surface context))
+(defgeneric attach (context surface))
+(defgeneric detach (surface))
 
 ;; responsibility of the caller to check if surfaces exist to be gotten.
 
@@ -76,12 +84,11 @@
    '(console . :fb32)
    '(unknown . :rgba32)))
 
-(defun create (&key (type nil) (width 10) (height 10) (depth 32) (location '(0 . 0)) (override :on))
-  (let* ((surface-type (or type (get-default-type)))
-	 (fn (getf *available-surfaces* surface-type))
-	 (surface (apply fn `(:width ,width :height ,height :depth ,depth :location ,location :override ,override))))
-   #+elements(elements:register surface)
-    (unless (eql type :x-pixmap) (prepare surface))
+(defun create (width height &rest rest &key (type nil) (depth 32) (location '(0 . 0)) (override :on))
+  (let* ((type (getf rest :type))
+         (args (progn (remf rest :type) rest) )
+         (surface (apply '%create (or type (get-default-type)) width height args)))
+    #+elements(elements:register surface)
     surface))
 
 (defun get-default-type ()
